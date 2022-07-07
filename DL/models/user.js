@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
-        require: true
+        required: true
     },
     lastName: {
         type: String,
@@ -15,9 +15,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         unique: true
     },
-    password: {
-        required: true,
+    salt:{
         type: String,
+        required: true,
+        select: false
+    },
+    hashedPassword: {
+        type: String,
+        required: true,
         select: false
     },
     createDate: {

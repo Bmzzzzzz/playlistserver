@@ -4,7 +4,7 @@ const userRouter = require('./userRoute')
 // const itemRouter=require('./itemRoute')
 // const ordresRouter=require('./orderRoute')
 
-router.use("/user", userRouter)
+router.use("/users", userRouter)
 // router.use("/item",itemRouter)
 // router.use("/order",ordresRouter)
 
