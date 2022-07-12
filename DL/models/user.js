@@ -1,6 +1,8 @@
 
 require('../db').connect()
 const mongoose = require('mongoose')
+require("./playlists")
+
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -29,16 +31,9 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    address: {
-        street: { type: String },
-        homeNumber: { type: Number },
-        city: { type: String }
-    },
-
-    gender: {
-        type: String,
-        enum: ['male', 'famle']
-    },
+    // playlists: [{
+    //     playlistId: { type: SchemaTypes.ObjectId, ref: 'playlists' }
+    // }],
     lastlog: {
         type: Date,
         default: Date.now
