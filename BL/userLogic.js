@@ -29,7 +29,7 @@ exports.login = async (email, password) => {
 
   if (!email || !password) throw ({ code: 409, message: "missing data" })
 
-  const eUser = await userController.readOne({ email: email },["+hashedPassword", "+salt"]);
+  const eUser = await userController.readOne({ email },["+hashedPassword", "+salt"]);
   if (!eUser) throw ({ code: 400, message: "user not found" })
 
   const verified = await bcrypt.compare(password, eUser.hashedPassword);
