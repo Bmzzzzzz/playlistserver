@@ -1,6 +1,9 @@
 
 const mongoose = require('mongoose');
 
+//playlistname playlistId userref songs 
+//BL-   add remove 
+
 const itemSchema = new mongoose.Schema({
     name: {
         type: String,

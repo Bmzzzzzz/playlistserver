@@ -1,16 +1,13 @@
 const jwt = require("jsonwebtoken")
-const secret = process.env.TOKEN
+const secret = process.env.SECRET_JWT
 
 
 function createToken(id) {
-    const token = jwt.sign({ id }, secret, { expiresIn: "10h" })
+    const token = jwt.sign({ id }, secret, { expiresIn: "1m" })
     return token
 }
-console.log(createToken("asas"));
-
 
 function validateToken(token) {
     return jwt.verify(token, secret)
 }
-// console.log(validateToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFzYXMiLCJpYXQiOjE2NTU4MTU1MjcsImV4cCI6MTY1NTgxOTEyN30.8f16gChednIwkR5LaOo1oVYUfSz_9aZtzg0XdYrXwLs", secret));
 module.exports = { createToken, validateToken }

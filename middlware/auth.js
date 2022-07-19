@@ -1,4 +1,4 @@
-const {validateToken}=require('../BL/jwt')
+const {validateToken}=require('./jwt')
 const{readOne}=require('../DL/controllers/userController')
 async function auth(req,res,next){
 const token=req.headers.authorization

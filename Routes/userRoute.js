@@ -28,7 +28,7 @@ router.post("/login", async (req, res) => {
     }
     catch (error) {
         console.log(error);
-        res.status(500).send("sorry ,something went wrong login")
+        res.status(error.code).send(error.message)
     }
 
 })
@@ -38,9 +38,9 @@ router.post("/login", async (req, res) => {
 
 router.post("/register", async (req, res) => {
     try {
-        const newUser = await userLogic.register(req.body)
+        const token = await userLogic.register(req.body)
 
-        res.send({ n: "register" })
+        res.status(200).send({ token })
     } catch (error) {
         console.log(error);
         res.status(500).send(error.massage)
@@ -62,7 +62,6 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-    console.log("id")
     const user = await userLogic.getUserDetailsById(req.params.id)
     res.send(user);
 });

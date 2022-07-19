@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const {SchemaTypes} = mongoose
 require('./user')
-require('./item')
+require('./playlists')
 
 const orderSchema = new mongoose.Schema({
     orderDate: {
