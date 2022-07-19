@@ -1,5 +1,5 @@
 const userController = require('../DL/controllers/userController.js')
-const{createToken}=require('./jwt')
+const{createToken}=require('../middlware/jwt')
 
 
 exports.getUserDetailsById = (id) => {

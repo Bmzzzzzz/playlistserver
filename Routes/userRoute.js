@@ -11,12 +11,20 @@ const userLogic = require('../BL/userLogic')
 // })
 
 
-
+router.get("/all", async (req, res) => {
+    try {
+        const users = await userLogic.getAllusers();
+        res.send(users)
+    } catch (error) {
+        console.log(error.msg);
+        res.status(500).send("sorry ,something went wrong")
+    }
+});
 router.post("/login", async (req, res) => {
     try {
         const user = await userLogic.login(req.body.email, req.body.password)
         console.log("login");
-        res.send("login" + user)
+        res.send(user)
     }
     catch (error) {
         console.log(error);
@@ -58,15 +66,7 @@ router.get("/:id", async (req, res) => {
     const user = await userLogic.getUserDetailsById(req.params.id)
     res.send(user);
 });
-router.get("/all", async (req, res) => {
-    try {
-        const users = await userLogic.getAllusers();
-        res.send(users)
-    } catch (error) {
-        console.log(error.msg);
-        res.status(500).send("sorry ,something went wrong")
-    }
-});
+
 
 
 
