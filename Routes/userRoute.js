@@ -9,29 +9,12 @@ router.post("/register", async (req, res) => {
         const token = await userLogic.register(req.body)
         res.status(200).send({ token })
 
-<<<<<<< HEAD
     } catch (error) {
         console.log(error);
         res.status(error.code).send(error.massage)
     }
 })
 
-=======
-// router.all('/test', auth, (req, res) => {
-//     res.send("test")
-// })
-
-
-router.get("/all", async (req, res) => {
-    try {
-        const users = await userLogic.getAllusers();
-        res.send(users)
-    } catch (error) {
-        console.log(error.msg);
-        res.status(500).send("sorry ,something went wrong")
-    }
-});
->>>>>>> 5f8ad580ade1db43c8f54ededa6541fbd5ed1154
 router.post("/login", async (req, res) => {
     try {
         const user = await userLogic.login(req.body.email, req.body.password)
@@ -73,7 +56,6 @@ router.get("/:id", authJWT, async (req, res) => {
       }
 });
 
-<<<<<<< HEAD
 router.get("/all", authJWT, async (req, res) => {
     try {
         const users = await userLogic.getAllusers();
@@ -87,8 +69,6 @@ router.get("/all", authJWT, async (req, res) => {
         }
       }
 });
-=======
->>>>>>> 5f8ad580ade1db43c8f54ededa6541fbd5ed1154
 
 router.put('/:id', authJWT, async (req, res) => {
     const savedUser = await userLogic.updateUser(req.params.id, req.body)
