@@ -60,12 +60,16 @@ exports.getUserDetailsById = async (id) => {
 }
 
 exports.updateUser = async (id, newFiled) => {
+<<<<<<< HEAD
   console.log("userlogic 61: ", id, newFiled);
   const updateUser= await userController.update({ _id: id }, newFiled);
   return updateUser;
+=======
+  return userController.update({ _id: id }, newFiled)
+>>>>>>> 5f8ad580ade1db43c8f54ededa6541fbd5ed1154
 };
 
-exports.del = async (id) => {
-  const delUser = await userController.del({ _id: id });
-  return delUser;
+exports.del = (id) => {
+  return userController.del({ _id: id });
+
 }
