@@ -1,24 +1,32 @@
-require('../db').connect();
+const { playListModel } = require('../models/playlist')
 
-const { itemModel } = require('../models/item')
 
 async function create(data) {
-    return  await itemModel.create(data);
+    return  await playListModel.create(data);
     
 }
 async function read(filter, proj) {
-    return await itemModel.find(filter, proj);
-    
+   return await playListModel.find(filter, proj);   
 }
+
+async function readOne(filter, proj) {
+    return await playListModel.findOne(filter, proj);
+}
+
 async function update(filter, newData) {
-    return await itemModel.updateOne(filter, newData);
-   
+    return await playListModel.updateOne(filter, newData);   
 }
 
+async function findAndUpdate(filter, newData, proj) {
+    return await playListModel.findOneAndUpdate(filter, newData, proj);   
+}
 
-module.exports = { create, read, update }
+async function del(filter) {
+    return await update(filter, { isActive: false });
+}
 
+async function delet(data) {
+    return  await playListModel.deleteOne({data});
+}
 
-
-
-//create(item1)
+module.exports = { create, read, readOne, update, findAndUpdate, del, delet }

@@ -1,10 +1,10 @@
-
-require('../db').connect()
 const mongoose = require('mongoose')
-require("./playlists")
+const {SchemaTypes} = mongoose
+require("./playlist")
 
 
 const userSchema = new mongoose.Schema({
+
     firstName: {
         type: String,
         required: true
@@ -31,22 +31,18 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    // playlists: [{
-    //     playlistId: { type: SchemaTypes.ObjectId, ref: 'playlists' }
-    // }],
+    playlists: [{
+            type: String , 
+            ref: 'playlist'
+    }],
     lastlog: {
         type: Date,
         default: Date.now
     },
 
-    // token: {
-    //     type: String,
-    //     required: false,
-    //     select: false
-    // },
     isActive: {
         type: Boolean,
-        default: true //הנתון הדיפולטבי שיכנס 
+        default: true
     }
 })
 
@@ -54,6 +50,3 @@ const userModel = mongoose.model('user', userSchema);
 
 module.exports = { userModel }
 
-
-//
-//מפעיל את הUSER

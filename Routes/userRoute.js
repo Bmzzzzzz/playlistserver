@@ -1,127 +1,85 @@
-
 const express = require("express")
 const router = express.Router();
 const userLogic = require('../BL/userLogic')
-//const auth = require('../middlware/auth')
+const { authJWT } = require('../middlware/auth')
 
 
+router.post("/register", async (req, res) => {
+    try {
+        const token = await userLogic.register(req.body)
+        res.status(200).send({ token })
 
-// router.all('/test', auth, (req, res) => {
-//     res.send("test")
-// })
-
-
+    } catch (error) {
+        console.log(error);
+        res.status(error.code).send(error.massage)
+    }
+})
 
 router.post("/login", async (req, res) => {
     try {
         const user = await userLogic.login(req.body.email, req.body.password)
-        console.log("login");
         res.send(user)
     }
     catch (error) {
         console.log(error);
         res.status(error.code).send(error.message)
     }
-
-})
-
-//router(auth)//chakc if login
-
-
-router.post("/register", async (req, res) => {
-    try {
-        const token = await userLogic.register(req.body)
-
-        res.status(200).send({ token })
-    } catch (error) {
-        console.log(error);
-        res.status(500).send(error.massage)
-    }
 })
 
 
-router.get("/", async (req, res) => {
-    console.log("id")
+router.get("/", authJWT, async (req, res) => {
     try {
-        const user = await userLogic.getUserDetailsById(req.query.id)
+        const user = await userLogic.getUserDetailsById(req._id)
         res.send(user);
+    
+    } catch (error) {
+    console.log("get", error);
+    if (error.code && error.code < 1000) {
+      res.status(error.code).send(error.message)
+    } else {
+      res.status(500).send("something went wrong")
     }
-    catch (error) {
-        console.log(error.msg);
-
-    }
-
+  }
 });
 
-router.get("/:id", async (req, res) => {
-    const user = await userLogic.getUserDetailsById(req.params.id)
-    res.send(user);
+router.get("/:id", authJWT, async (req, res) => {
+    try{
+        const user = await userLogic.getUserDetailsById(req.params.id)
+        res.send(user);
+    } catch (error) {
+        console.log("get", error);
+        if (error.code && error.code < 1000) {
+          res.status(error.code).send(error.message)
+        } else {
+          res.status(500).send("something went wrong")
+        }
+      }
 });
-router.get("/all", async (req, res) => {
+
+router.get("/all", authJWT, async (req, res) => {
     try {
         const users = await userLogic.getAllusers();
         res.send(users)
     } catch (error) {
-        console.log(error.msg);
-        res.status(500).send("sorry ,something went wrong")
-    }
+        console.log("get", error);
+        if (error.code && error.code < 1000) {
+          res.status(error.code).send(error.message)
+        } else {
+          res.status(500).send("something went wrong")
+        }
+      }
 });
 
-
-
-
-
-router.post('/', async (req, res) => {
-    const { firstName, lastName, email } = req.body;
-    const rest = {
-        password: "987865",
-        address: {
-            street: 12,
-            homeNum: 34,
-            city: "jerusalem",
-        },
-        gender: 'male'
-    }
-
-    const userFields = { firstName, lastName, email, ...restFields };
-    const user = await userLogic.createUser(userFields);
-    res.send(user + "new user" + req.firstName + " " + req.lastName + " created")
-});
-
-
-
-router.put('/edit_user/:id', async (req, res) => {
-    const savedUser = await userLogic.updateUser(req.query.id, req.body)
+router.put('/:id', authJWT, async (req, res) => {
+    const savedUser = await userLogic.updateUser(req.params.id, req.body)
     res.send(savedUser)
 })
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authJWT, async (req, res) => {
     const delUser = await userLogic.delete(req.query.id)
     res.send(delUser)
 })
 
-
-
-
-
-
-
-
-
-
-
-// res.send({
-//     firstName: "Yonatan",
-//     lastName: "Ramon",
-//     email: "Yokon@walla.com",
-//     password: "987865",
-//     address: {
-//         street: 12,
-//         homeNum: 34,
-//         city: "jerusalem",
-//     },
-//     gender: 'male'
-// })
 
 module.exports = router;
 

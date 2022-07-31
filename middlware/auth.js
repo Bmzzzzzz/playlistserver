@@ -1,17 +1,38 @@
-const {validateToken}=require('./jwt')
-const{readOne}=require('../DL/controllers/userController')
-async function auth(req,res,next){
-const token=req.headers.authorization
-//verify token
-try{
-const decode=validateToken(token)
-const eUser=await readOne({_id:decode.id})
-if(!eUser)throw""
-next()
-}catch(error){
-    res.status(503).send({message:"not auth"})
+const jwt = require("jsonwebtoken");
+const {getUserDetailsById} = require("../BL/userLogic");
 
+const authJWT = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+        const token = authHeader.split(" ")[1];
+        jwt.verify(token, process.env.SECRET_JWT, (err, verifyToken) => {
+            if (err) {
+                return res.sendStatus(403);
+            }
+            req._id = verifyToken.id;
+            console.log("auth id: ", req._id);
+            next();
+        });
+    } else {
+        res.sendStatus(401);
+    }
+};
+
+const adminAuth = async (req, res, next) => {
+    const user = await getUserDetailsById(req._id);
+    if (user.permission === 'admin') {
+        next();
+    }
+    else return res.sendStatus(403);
 }
 
-}
-module.exports=auth
+module.exports = { authJWT , adminAuth }
+
+
+// fetch("http://localhost:3001/api/users/", {
+//     method: "GET",
+//     headers: { Authorization: `bearer ${localStorage.storeAccesstoken}` },
+//     body: {}
+
+// })
+

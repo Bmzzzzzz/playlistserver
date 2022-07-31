@@ -1,11 +1,10 @@
 const express = require("express")
 const router = express.Router();
 const userRouter = require('./userRoute')
-// const itemRouter=require('./itemRoute')
-// const ordresRouter=require('./orderRoute')
+const playlistRouter=require('./playlistRoute')
+
 
 router.use("/users", userRouter)
-// router.use("/item",itemRouter)
-// router.use("/order",ordresRouter)
+router.use("/playlists", playlistRouter)
 
 module.exports = router
