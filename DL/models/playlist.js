@@ -4,25 +4,30 @@ const {SchemaTypes} = mongoose;
 require('./user')
 //playlistname playlistId userref songs 
 //BL-   add remove 
+//songs - id, title, url, duration-formated ,thumbnail.url 
 
 const playListSchema = new mongoose.Schema({
 
-    name: {
+    title: {
         type: String,
         required: true
     },
-    id: {
-        type: String,
-        required: true,
-        unique: true
-    },
+    // id: {
+    //     type: String,
+    //     required: true,
+    //     unique: true
+    // },
     userId: {
         type: SchemaTypes.ObjectId,
         ref: 'user',
         required: true
     },
     songs:[{
-       type: Object
+       title: String,
+       id: String,
+       url: String,
+       duration: String,
+       thumbnail: String
         }
     ],
     // img: {

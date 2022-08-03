@@ -6,6 +6,7 @@ const { authJWT } = require('../middlware/auth')
 
 router.post("/", authJWT, async (req, res) => {
     try{
+      console.log("routh9 ",req.body);
         const playList = await playListLogic.addPlayList(req.body)
         res.send(playList);
     } catch (error) {

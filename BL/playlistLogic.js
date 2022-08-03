@@ -3,9 +3,9 @@ const userLogic = require('./userLogic')
 
 
 async function addPlayList(playlist){
-    const {name, userId, id,songs, img, description, category} = playlist;
-    if (!name)
-    throw {code: 400, message: "missing playlist name" };
+    const {title, userId, id,songs, img, description, category} = playlist;
+    if (!title)
+    throw {code: 400, message: "missing playlist title" };
     if (!userId)
     throw {code: 400, message: "missing user id" };
 
@@ -16,7 +16,7 @@ async function addPlayList(playlist){
 
     const newPlaylist = await playlistController.create(playlist);
     if (!newPlaylist) throw({ code: 444, message: "couldn't create playlist" });
-    const addToUser = await userLogic.updateUser(userId, {$push :{ playlists: id}})
+    const addToUser = await userLogic.updateUser(userId, {$push :{ playlists: newPlaylist._id}})
     if (!addToUser) throw({ code: 444, message: "couldn't update user" });
     return (newPlaylist,addToUser);
 }
@@ -55,6 +55,7 @@ async function del (id) {
 async function addSong(playlistId, song){
 
     if(!playlistId || !song) throw({ code: 404, message: "missing data" });
+    if(!song.id || !song.title || !song.url || !song.duration || !song.thumbnail) throw({ code: 404, message: "missing song data" });
     
     const playList = await getPlaylistById(playlistId)
     if (!playList) throw({ code: 404, message: "playlist not found" });
