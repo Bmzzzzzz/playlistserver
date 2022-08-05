@@ -40,7 +40,7 @@ exports.login = async (email, password) => {
   console.log("🚀 ~ file: userLogic.js ~ line 38 ~ login ~ user", eUser)
 
   const verified = await bcrypt.compare(password, eUser.hashedPassword);
-  if (!verified) {throw ({ code: 503, message: "unauthorized" })};
+  if (!verified) {throw ({ code: 403, message: "unauthorized" })};
 
   const token=createToken(eUser._id)
   return token;

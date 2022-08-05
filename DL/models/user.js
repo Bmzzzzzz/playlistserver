@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
         default: Date.now
     },
     playlists: [{
-            type: SchemaTypes.ObjectId,
+            type: Number , 
             ref: 'playlist'
     }],
     lastlog: {

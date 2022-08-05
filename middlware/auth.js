@@ -10,7 +10,7 @@ const authJWT = (req, res, next) => {
                 return res.sendStatus(403);
             }
             req._id = verifyToken.id;
-            console.log("auth id: ", req._id);
+            // console.log("auth id: ", req._id);
             next();
         });
     } else {

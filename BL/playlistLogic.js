@@ -12,13 +12,16 @@ async function addPlayList(playlist){
     const user = await userLogic.getUserDetailsById(userId);
     if (!user) throw({ code: 404, message: "user not found" });
 
+    const playlistExist = await getPlaylistsNamesByUserId(userId)
+    if ( playlistExist.find(t=>t.title===title) ) throw({code: 405, message: "playlist already exist"})
+
     if (!songs) playlist.songs = [];
 
     const newPlaylist = await playlistController.create(playlist);
     if (!newPlaylist) throw({ code: 444, message: "couldn't create playlist" });
-    const addToUser = await userLogic.updateUser(userId, {$push :{ playlists: newPlaylist._id}})
+    const addToUser = await userLogic.updateUser(userId, {$push :{ playlists: id}})
     if (!addToUser) throw({ code: 444, message: "couldn't update user" });
-    return (newPlaylist,addToUser);
+    return ([newPlaylist,addToUser]);
 }
 
 async function getAllPlayLists(){
@@ -27,10 +30,22 @@ async function getAllPlayLists(){
     return playLists;
 }
 
-async function getPlaylistById(id){
-    const playList = await playlistController.readOne({ id});
+async function getPlaylistById(_id){
+    const playList = await playlistController.readOne({ _id});
     if (!playList) throw({ code: 404, message: "playlist not found" });
     return playList;
+}
+
+async function getPlaylistsNamesByUserId(id){
+    const playLists = await playlistController.read({ userId : id },"title");
+    if (!playLists) throw({ code: 404, message: "playlist not found" });
+    return playLists;
+}
+
+async function getPlaylistsByUserId(id){
+    const playLists = await playlistController.read({ userId : id });
+    if (!playLists) throw({ code: 404, message: "playlist not found" });
+    return playLists;
 }
 
 async function updatePlaylist(id, newFiled) {
@@ -39,7 +54,7 @@ async function updatePlaylist(id, newFiled) {
     const playList = await getPlaylistById(id)
     if (!playList) throw({ code: 404, message: "playlist not found" });
     
-    const updatePlaylist= await playlistController.update({ id: id }, newFiled);
+    const updatePlaylist= await playlistController.update({ _id: id }, newFiled);
     return updatePlaylist;
 };
 
@@ -52,49 +67,4 @@ async function del (id) {
     return delPlaylist;
 }
 
-async function addSong(playlistId, song){
-
-    if(!playlistId || !song) throw({ code: 404, message: "missing data" });
-    if(!song.id || !song.title || !song.url || !song.duration || !song.thumbnail) throw({ code: 404, message: "missing song data" });
-    
-    const playList = await getPlaylistById(playlistId)
-    if (!playList) throw({ code: 404, message: "playlist not found" });
-
-    const updatePlaylist= await playlistController.update({ id: playlistId }, { $push :{ songs: song}});
-    return updatePlaylist;
-    
-};
-
-
-// async function removeSong (playlistId, songId) {
-
-//     if(!playlistId || !songId) throw({ code: 404, message: "missing data" });
-    
-//     const playList = await getPlaylistById(playlistId)
-//     if (!playList) throw({ code: 404, message: "playlist not found" });
-    
-//     const song = await getSongById(playlistId, songId)
-//     if (!song) throw({ code: 404, message: "song not found" });
-    
-//     const delSong= await playlistController.delet({playList[songs]:{id:songId}});///
-//     return delSong;
-    
-// };
-
-// async function getSongById(playlistId, songId){
-    
-//     if(!playlistId || !songId) throw({ code: 404, message: "missing data" });
-    
-//     const playList = await getPlaylistById(playlistId)
-//     if (!playList) throw({ code: 404, message: "playlist not found" });
-    
-//     const song = await playlistController.findAndUpdate({_id: playlistId},,{songs.sond.id})
-// };
-
-// { _id : 1 },
-// { $set: { "grades.$[elem].mean" : 100 } },
-// { arrayFilters: [ { "elem.grade": { $gte: 85 } } ] }
-
-module.exports = { getAllPlayLists, getPlaylistById, addPlayList, updatePlaylist, del, addSong };
-
-// getSongById, removeSong
+module.exports = { getAllPlayLists, getPlaylistById, getPlaylistsNamesByUserId, getPlaylistsByUserId, addPlayList, updatePlaylist, del };
