@@ -53,8 +53,8 @@ exports.getAllusers = async () => {
   return users;
 };
 
-exports.getUserDetailsById = async (id) => {
-  const user = await userController.readOne({ _id: id })
+exports.getUserDetailsById = async (_id) => {
+  const user = await userController.readOne({ _id })
   if (!user) throw ({ code: 404, message: "user not found" })
   return user;
 }

@@ -1,12 +1,19 @@
 const mongoose = require('mongoose')
 const {SchemaTypes} = mongoose;
 require('./playlist')
+require('./user')
 
 
 const songSchema = new mongoose.Schema({
 
     id: {
         type: String,
+        required: true
+    },
+
+    userId:{
+        type: SchemaTypes.ObjectId,
+        ref: 'user',
         required: true
     },
 
@@ -26,12 +33,14 @@ const songSchema = new mongoose.Schema({
         required: true
     },
 
-    duration: {
+    duration_formatted: {
         type: String
     },
 
     thumbnail: {
-        type: String
+        url: {
+            type: String
+        }
     },
 
     isActive: {

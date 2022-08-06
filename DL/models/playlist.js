@@ -22,7 +22,7 @@ const playListSchema = new mongoose.Schema({
         required: true
     },
     songs:[ {
-        type: String,
+        type: SchemaTypes.ObjectId,
         ref: 'song'
         }
     ],

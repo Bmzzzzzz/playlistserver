@@ -19,7 +19,7 @@ async function addPlayList(playlist){
 
     const newPlaylist = await playlistController.create(playlist);
     if (!newPlaylist) throw({ code: 444, message: "couldn't create playlist" });
-    const addToUser = await userLogic.updateUser(userId, {$push :{ playlists: id}})
+    const addToUser = await userLogic.updateUser(userId, {$push :{ playlists: newPlaylist._id}})
     if (!addToUser) throw({ code: 444, message: "couldn't update user" });
     return ([newPlaylist,addToUser]);
 }

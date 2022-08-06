@@ -1,20 +1,25 @@
 const songController = require('../DL/controllers/songController')
 const playlistLogic = require('./playlistLogic');
+const userLogic = require('./userLogic');
 
 
 async function addSong(song){
 
+    const {playlistId, userId, id, title, url, duration_formatted} = song;
     if(!song) throw({ code: 404, message: "missing data" });
-    if(!song.playlistId, !song.id || !song.title || !song.url || !song.duration || !song.thumbnail) throw({ code: 404, message: "missing song data" });
+    if(!playlistId || !userId || !id || !title || !url || !duration_formatted ) throw({ code: 404, message: "missing song data" });
     
-    const playList = await playlistLogic.getPlaylistById(song.playlistId)
+    const user = await userLogic.getUserDetailsById(userId)
+    if (!user) throw({ code: 404, message: "user not found" });
+
+    const playList = await playlistLogic.getPlaylistById(playlistId)
     if (!playList) throw({ code: 404, message: "playlist not found" });
 
-    if( await getSongById(song.playlistId, song.id)) throw({ code:405, message: "Song already exist" });
-
-    const updatePlaylist= await playlistLogic.updatePlaylist( song.playlistId , { $push :{ songs : song.id }});
-
+    const ifExist = await songController.read({ playlistId, id })
+    if(ifExist.length > 0) throw({ code:405, message: "Song already exist" });
+   
     const newSong= await songController.create(song)
+    const updatePlaylist= await playlistLogic.updatePlaylist( playlistId , { $push :{ songs : newSong._id }});
 
     return [updatePlaylist, newSong ];
     
@@ -36,24 +41,36 @@ async function addSong(song){
     
 // };
 
-async function getSongById(playlistId, id){
+async function getPlaylistSongs(playlistId){
     
-    if(!playlistId || !id) throw({ code: 404, message: "missing data" });
-    
-    // const playList = await playlistLogic.getPlaylistById(playlistId)
-    // if (!playList) throw({ code: 404, message: "playlist not found" });
-    console.log("Slogic42", playlistId, id);
+    if(!playlistId ) throw({ code: 404, message: "missing playlist id data" });
 
-    const song = await songController.read({ playlistId, id })
-    if (!song) throw({ code: 404, message: "song not found" });
+    const song = await songController.read({ playlistId })
+    if (!song) throw({ code: 404, message: "no songs found" });
 
     return song;
 };
 
-// { _id : 1 },
-// { $set: { "grades.$[elem].mean" : 100 } },
-// { arrayFilters: [ { "elem.grade": { $gte: 85 } } ] }
+async function getUserSongs(_id){
+    
+    if(!_id ) throw({ code: 404, message: "missing user id data" });
 
+    const songs = await songController.read({ userId: _id })
+    if (!songs) throw({ code: 404, message: "no songs found" });
 
-module.exports = { addSong, getSongById }
+    return songs;
+};
+
+async function getSongById(playlistId, id){
+    
+    if(!playlistId || !id) throw({ code: 404, message: "missing data" });
+    
+    const song = await songController.read({ playlistId, id })
+ 
+    if (song.length===0) throw({ code: 404, message: "song not found" });
+
+    return song;
+};
+
+module.exports = { addSong, getSongById, getPlaylistSongs, getUserSongs }
 // , removeSong
