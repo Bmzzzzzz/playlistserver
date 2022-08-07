@@ -22,19 +22,15 @@ const playListSchema = new mongoose.Schema({
         required: true
     },
     songs:[ {
-        type: SchemaTypes.ObjectId,
-        ref: 'song'
+        _id:{
+            type: SchemaTypes.ObjectId,
+            ref: 'song'
+        },
+        isActive: {
+            type: Boolean,
+            default: true
         }
-    ],
-    // img: {
-    //     type: String,
-    // },
-    // description: {
-    //     type: String,
-    // },
-    // category: {
-    //     type: String
-    // },
+    } ],
     createDate: {
         type: Date,
         default: Date.now

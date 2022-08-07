@@ -19,25 +19,10 @@ router.post('/', authJWT, async (req, res) => {
     }
 })
   
-router.delete('/remove-song/:id', authJWT, async (req, res) => {
+router.delete('/:id/:playlistId', authJWT, async (req, res) => {
   try{
-    const savedSong = await songLogic.removeSong(req.params.id, req.body)
-    res.send(savedSong)
-  } 
-  catch (error) {
-    console.log(error);
-    if (error.code && error.code < 1000) {
-      res.status(error.code).send(error.message)
-    } else {
-      res.status(500).send("something went wrong")
-    }
-  }
-})
-
-router.get('/allSongsInPlaylist/:playlistId', authJWT, async (req, res) => {
-  try{
-    const songs = await songLogic.getPlaylistSongs(req.params.playlistId)
-    res.send(songs)
+    const delitedSong = await songLogic.removeSong(req.params.id, req.params.playlistId)
+    res.send(delitedSong)
   } 
   catch (error) {
     console.log(error);
@@ -64,9 +49,24 @@ router.get('/userSongs', authJWT, async (req, res) => {
   }
 })
 
-router.get('/:playlistId/:id', authJWT, async (req, res) => {
+router.get('/allSongsInPlaylist/:playlistId', authJWT, async (req, res) => {
   try{
-    const savedSong = await songLogic.getSongById(req.params.playlistId, req.params.id)
+    const songs = await songLogic.getPlaylistSongs(req.params.playlistId)
+    res.send(songs)
+  } 
+  catch (error) {
+    console.log(error);
+    if (error.code && error.code < 1000) {
+      res.status(error.code).send(error.message)
+    } else {
+      res.status(500).send("something went wrong")
+    }
+  }
+})
+
+router.get('/:id', authJWT, async (req, res) => {
+  try{
+    const savedSong = await songLogic.getSongById( req.params.id)
     res.send(savedSong)
   } 
   catch (error) {

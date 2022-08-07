@@ -60,7 +60,6 @@ exports.getUserDetailsById = async (_id) => {
 }
 
 exports.updateUser = async (id, newFiled) => {
-  console.log("userlogic 61: ", id, newFiled);
   const updateUser= await userController.update({ _id: id }, newFiled);
   return updateUser;
 };
